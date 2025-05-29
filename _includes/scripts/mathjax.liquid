@@ -4,8 +4,13 @@
     <script type="text/javascript">
       window.MathJax = {
         tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
           tags: 'ams',
+          packages: ['base', 'ams', 'color'],
         },
+        loader: {
+          load: ['[tex]/ams', '[tex]/color']
+        }
       };
     </script>
     <script
@@ -13,7 +18,9 @@
       type="text/javascript"
       id="MathJax-script"
       src="{{ site.third_party_libraries.mathjax.url.js }}"
+      {% comment %}
       integrity="{{ site.third_party_libraries.mathjax.integrity.js }}"
+      {% endcomment %}
       crossorigin="anonymous"
     ></script>
     <script
