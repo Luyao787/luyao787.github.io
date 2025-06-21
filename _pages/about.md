@@ -18,7 +18,9 @@ selected_papers: false # includes a list of papers marked as "selected={true}"
 social: false # includes social icons at the bottom of the page
 ---
 
-I am a PhD candidate at TU Delft, specializing in control systems and robotics. My research focuses on interaction-aware motion planning and numerical optimization. 
+I am a PhD candidate at TU Delft, specializing in control systems and robotics. My research focuses on interaction-aware motion planning and numerical optimization.
+
+Feel free to reach out to me at [l.zhang-7@tudelft.nl](mailto:l.zhang-7@tudelft.nl).
 
 <!-- Write your biography here. Tell the world about yourself. Link to your favorite [subreddit](http://reddit.com). You can put a picture in, too. The code is already in, just name your picture `prof_pic.jpg` and put it in the `img/` folder.
 
