@@ -9,13 +9,14 @@ related_posts: false
 ---
 
 <style>
-.justified-text {
+.post-content p:not([align]), .post-content li {
   text-align: justify;
   text-justify: inter-word;
 }
+.post-content p[align="center"] {
+  text-align: center;
+}
 </style>
-
-<div class="justified-text">
 
 Simulating multibody systems with frictional contact is crucial in robotics, particularly for training robotic systems.
 This blog introduces some fundamental concepts of contact modeling.
@@ -227,6 +228,4 @@ The code for this example is available [here](https://github.com/Luyao787/contac
 As shown in the figure above, the cube moves in the z-direction, and its displacement from the ground decreases as the tangential velocity $c_T$ diminishes. 
 To conclude, such an artifact only emerges in the case of sliding, and its consequence can be ignored when the discretization step is small and the tangential velocity is low. 
 In robotics applications such as grasping, locomotion, or rolling contact, the sticking mode is often of primary interest and can be precisely modeled using complementarity constraint problems (CCPs).
-
-</div>
 
