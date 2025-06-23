@@ -194,7 +194,7 @@ Below, we provide a visual illustration of \eqref{eq:compact_form}.
 
 We note that the compact formulation \eqref{eq:compact_form} is related to a Nolinear Complementarity Problem (NCP).
 It is challenging to solve a NCP in general.
-Therefore, several approximation methods have been proposed. For example, by relaxing the complementarity constraint, we arrive at a Conic Complementarity Problem (CCP):
+Therefore, several approximation methods have been proposed. For example, by relaxing the complementarity constraint, we arrive at a Cone Complementarity Problem (CCP):
 
 $$
 \begin{equation} \label{eq:CCP}
