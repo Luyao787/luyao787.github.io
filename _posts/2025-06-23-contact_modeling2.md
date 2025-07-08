@@ -2,7 +2,7 @@
 layout: post
 title: Contact Dynamics
 date: 2025-06-23
-description: Cone Complementarity Problem 
+description: Cone Complementarity Problem formulation for contact modeling
 tags:
 categories:
 related_posts: false

@@ -2,7 +2,7 @@
 layout: post
 title: Contact Dynamics
 date: 2025-06-01
-description: Formulation 
+description: Mathematical formulation of contact dynamics
 tags:
 categories:
 related_posts: false
