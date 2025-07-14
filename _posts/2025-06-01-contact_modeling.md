@@ -21,7 +21,7 @@ related_posts: false
 Simulating multibody systems with frictional contact is crucial in robotics, particularly for training robotic systems.
 This blog introduces some fundamental concepts of contact modeling.
 Let's consider the contact between the point foot of a quadruped and the ground.
-We define the gap function $\phi(q)$ as the signed distance between the point foot and the ground, where $\phi(q)$ represents the generalized positions. 
+We define the gap function $\phi(q)$ as the signed distance between the point foot and the ground, where $q$ represents the generalized positions. 
 
 <p align="center">
   <img src="/assets/img/Contact/quadruped.png" width="350"/>
