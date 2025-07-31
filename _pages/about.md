@@ -15,10 +15,15 @@ permalink: /
 
 news: false # includes a list of news items
 selected_papers: false # includes a list of papers marked as "selected={true}"
-social: false # includes social icons at the bottom of the page
+social: true # includes social icons at the bottom of the page
 ---
 
-I am a PhD candidate at TU Delft, specializing in control systems and robotics. My research focuses on interaction-aware motion planning and numerical optimization.
+<div style="text-align: justify;">
+I am a PhD candidate at TU Delft, specializing in control systems and robotics. My research focuses on interaction-aware motion planning and parallel trajectory optimization. 
+Before joining TU Delft, I worked on motion planning using reduced-order models and on whole body control for legged robots during my MSc study. After graduation, I joined the CLEAR lab as a research assistant at the Southern University of Science and Technology, focusing on legged locomotion as well.
+</div>
+
+---
 
 Feel free to reach out to me at [l.zhang-7@tudelft.nl](mailto:l.zhang-7@tudelft.nl).
 
