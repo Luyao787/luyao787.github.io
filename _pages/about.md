@@ -25,7 +25,9 @@ Before joining TU Delft, I worked on motion planning using reduced-order models 
 
 ---
 
-Feel free to reach out to me at [l.zhang-7@tudelft.nl](mailto:l.zhang-7@tudelft.nl).
+<!-- Feel free to reach out to me at [l.zhang-7@tudelft.nl](mailto:l.zhang-7@tudelft.nl). -->
+Feel free to reach out to me at [zly9706@gmail.com](mailto:zly9706@gmail.com).
+
 
 
 
