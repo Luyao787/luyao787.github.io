@@ -1120,6 +1120,18 @@ swiper-container {
   }
 }
 
+// Algorithm block styling
+.algorithm {
+  margin: 1.5em 0;
+  padding: 1em 1.5em;
+  border: 1px solid var(--global-divider-color);
+  border-top: 2px solid var(--global-text-color);
+  border-bottom: 2px solid var(--global-text-color);
+  background-color: var(--global-bg-color);
+  font-family: inherit;
+  line-height: 1.8;
+}
+
 // Ninja Keys
 // for more options, check https://github.com/ssleptsov/ninja-keys?tab=readme-ov-file#css-variables
 ninja-keys {
