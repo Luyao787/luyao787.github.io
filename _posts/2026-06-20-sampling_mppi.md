@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Sampling-Based Optimization
+title: Sampling-Based Optimization (MPPI)
 date: 2026-06-20
 description: A short introduction to exponential weighted sampling updates
 tags: sampling optimization control
