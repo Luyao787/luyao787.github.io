@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Score Ascent View of MPPI
-date: 2026-06-21
+date: 2026-06-28
 description: Deriving the MPPI update as score ascent on a noised target distribution
 tags: sampling optimization score control
 categories:
