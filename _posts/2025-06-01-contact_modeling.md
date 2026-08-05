@@ -28,7 +28,7 @@ We define the gap function $\phi(q)$ as the signed distance between the point fo
   <img src="/assets/img/Contact/quadruped.png" width="350"/>
 </p>
 
-The contact force $f$, expressed in the local frame, consists of the tangential component $f_T$ and the normal component $f_N$.
+The contact force $f$, expressed in the local contact frame, consists of the tangential component $f_T$ and the normal component $f_N$.
 The magnitude and direction of the contact force are not arbitrary. 
 As you may have heard, the contact force should lie within the so-called friction cone. 
 One of our main goals is to identify the constraints related to this force, and we will dive into those details later. 
@@ -46,15 +46,21 @@ $$
 M(q_t)(v_{t+1} - v_t) = \Delta t\left(\tau_t - h(q_t, v_t)\right) + J(q_t)^\top \boldsymbol{\lambda},
 $$
 
-where $\boldsymbol{\lambda}$ is the collection of contact impulses. Our goal is to compute $\boldsymbol{\lambda}$ and $v_{t+1}$, and then use $v_{t+1}$ to obtain $q_{t+1}$. 
-Now, it is time to discuss the constraints on contact forces/impulses. 
+where
+
+$$
+\boldsymbol{\lambda} := \int_{t}^{t + \Delta t} \boldsymbol{f}(s)\, \mathrm{d}s \approx \Delta t\, \boldsymbol{f}
+$$
+
+is the collection of contact impulses over the time step, with the approximation assuming that the contact forces remain constant during the step. Our goal is to compute $\boldsymbol{\lambda}$ and $v_{t+1}$, and then use $v_{t+1}$ to obtain $q_{t+1}$.
+We first state the unilateral contact constraints at the force level.
 
 - First, the normal component of the contact force should be nonnegative, i.e., $f_N \geq 0$.
 This means the environment can push against the feet of a quadruped, but it cannot pull them toward the ground. 
 
 - The signed distance is expected to be nonnegative as well, i.e., $\phi(q) \geq 0$.
 
-- The signed distance and contact force cannot be nonnull at the same time, i.e., $\lambda_N\, \phi(q) = 0$.
+- The signed distance and normal contact force cannot be nonzero at the same time, i.e., $f_N\, \phi(q) = 0$.
 
 The conditions above are known as the so-called *Signorini condition*, which can be rewritten in a compact form:
 
@@ -78,7 +84,7 @@ $$
 c_{i, t+1} = J_i(q_t) v_{t+1}.
 $$
 
-Replacing $f_N$ with $\lambda_N$, we rewrite the *Signorini condition* as 
+Since $\Delta t > 0$, scaling the normal contact force by the time step preserves its sign and complementarity properties. We can therefore express the discretized *Signorini condition* in terms of the normal contact impulse $\lambda_N$ as
 
 $$
 \begin{equation} \label{eq:comp_constr}
@@ -86,9 +92,9 @@ $$
 \end{equation}
 $$
 
-Let's continue to introduce the constraints on forces/impulses. 
+We now formulate the remaining contact constraints directly in terms of impulses.
 
-- One common friction model follows Coulomb's law for dry friction. Mathematically, this law suggests that the contact force should stay inside the friction cone:
+- One common friction model follows Coulomb's law for dry friction. Assuming that the contact frame and friction coefficient remain fixed during the time step, the contact impulse must stay inside the friction cone:
 
 $$
 \begin{equation} \label{eq:f_cone}
@@ -115,7 +121,7 @@ $$
 \end{equation}
 $$
 
-The two conditions, $ \Vert c_{T, t+1} \Vert_2 > 0$ and $\left( \frac{1}{\Delta t} \phi(q_{t}) + c_{N, t+1} \right) = 0$, indicates that the contact is undergoing sliding motion.
+The two conditions, $ \Vert c_{T, t+1} \Vert_2 > 0$ and $\left( \frac{1}{\Delta t} \phi(q_{t}) + c_{N, t+1} \right) = 0$, indicate that the contact is undergoing sliding motion.
 
 <!-- By gathering all conditions together, we obtain 
 
@@ -132,7 +138,7 @@ With all conditions established, we now apply them to various contact situations
 
 - Take-off (Loss of Contact)
 
-In this situation, the contact is breaking, i.e., $\left( \frac{1}{\Delta t} \phi(q_{t}) + c_{N, t+1} \right) > 0$. According to \eqref{eq:comp_constr} and \eqref{eq:f_cone}, the contact force should be null.
+In this situation, the contact is breaking, i.e., $\left( \frac{1}{\Delta t} \phi(q_{t}) + c_{N, t+1} \right) > 0$. According to \eqref{eq:comp_constr} and \eqref{eq:f_cone}, the contact impulse should be null.
 
 <p align="center">
   <img src="/assets/img/Contact/takeoff-1.png" width="400"/>
@@ -142,7 +148,7 @@ When contact is maintained, i.e., $\left( \frac{1}{\Delta t} \phi(q_{t}) + c_{N,
 
 - Sticking (Static Contact)
 
-In this situation, the tangential contact velocity is zero and the contact force lies inside the friction cone. 
+In this situation, the tangential contact velocity is zero and the contact impulse lies inside the friction cone.
 
 <p align="center">
   <img src="/assets/img/Contact/sticking-1.png" width="300"/>
@@ -150,7 +156,7 @@ In this situation, the tangential contact velocity is zero and the contact force
 
 - Sliding (Dynamic Contact with Friction)
 
-In this case, according to \eqref{eq:mdp}, the tangential contact velocity is strictly positive and the contact force reaches the boundary of the friction cone.
+In this case, according to \eqref{eq:mdp}, the tangential contact velocity is strictly positive and the contact impulse reaches the boundary of the friction cone.
 
 <p align="center">
   <img src="/assets/img/Contact/sliding-1.png" width="400"/>
@@ -193,7 +199,7 @@ Below, we provide a visual illustration of \eqref{eq:compact_form}.
   <img src="/assets/img/Contact/contact_cases.png" width="700"/>
 </p>
 
-We note that the compact formulation \eqref{eq:compact_form} is related to a Nolinear Complementarity Problem (NCP).
+We note that the compact formulation \eqref{eq:compact_form} is related to a Nonlinear Complementarity Problem (NCP).
 It is challenging to solve a NCP in general.
 Therefore, several approximation methods have been proposed. For example, by relaxing the complementarity constraint, we arrive at a Cone Complementarity Problem (CCP):
 
@@ -216,7 +222,7 @@ Although there is a difference in the take-off case (highlighted in blue), the C
   <img src="/assets/img/Contact/sliding_relaxed.png" width="420"/>
 </p>
 
-In this model, the term $\left( \frac{1}{\Delta t} \phi(q_{t}) + c_{N, t+1} \right)$ does not vanish. The normal velocity and normal force are both nonzero at the same time, which is physically inaccurate.
+In this model, the term $\left( \frac{1}{\Delta t} \phi(q_{t}) + c_{N, t+1} \right)$ does not vanish. The normal velocity and normal impulse are both nonzero at the same time, which is physically inaccurate.
 For example, consider a rigid cube placed on the ground with a nonzero velocity in the x-direction. The cube should slide and gradually slow down due to friction.
 However, if the CCP model is used, the cube will bounce due to the nonzero normal velocity.
 Next, let's see if a similar phenomenon can be observed in MuJoCo.
