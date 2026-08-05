@@ -5,6 +5,7 @@ date: 2026-06-24
 description: A direct natural-gradient derivation of sampling distribution updates
 tags: sampling optimization natural-gradient control
 categories:
+  - Sampling-based Optimization
 related_posts: false
 ---
 

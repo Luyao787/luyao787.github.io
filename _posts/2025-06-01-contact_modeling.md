@@ -5,6 +5,7 @@ date: 2025-06-01
 description: Mathematical formulation of contact dynamics
 tags:
 categories:
+  - Simulation
 related_posts: false
 ---
 
@@ -228,4 +229,3 @@ The code for this example is available [here](https://github.com/Luyao787/contac
 As shown in the figure above, the cube moves in the z-direction, and its displacement from the ground decreases as the tangential velocity $c_T$ diminishes. 
 To conclude, such an artifact only emerges in the case of sliding, and its consequence can be ignored when the discretization step is small and the tangential velocity is low. 
 In robotics applications such as grasping, locomotion, or rolling contact, the sticking mode is often of primary interest and can be precisely modeled using complementarity constraint problems (CCPs).
-

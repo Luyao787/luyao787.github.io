@@ -5,6 +5,7 @@ date: 2026-06-28
 description: Deriving the MPPI update as score ascent on a noised target distribution
 tags: sampling optimization score control
 categories:
+  - Sampling-based Optimization
 related_posts: false
 ---
 

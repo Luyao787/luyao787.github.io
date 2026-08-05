@@ -5,6 +5,7 @@ date: 2026-02-08
 description:
 tags:
 categories:
+  - Optimal Control
 related_posts: false
 ---
 

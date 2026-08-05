@@ -5,6 +5,7 @@ date: 2026-06-20
 description: A short introduction to exponential weighted sampling updates
 tags: sampling optimization control
 categories:
+  - Sampling-based Optimization
 related_posts: false
 ---
 
