@@ -17,16 +17,47 @@ related_posts: false
 .post-content p[align="center"] {
   text-align: center;
 }
+.post-content {
+  counter-reset: contact-figure;
+}
+.post-content .contact-figure {
+  counter-increment: contact-figure;
+  text-align: center;
+}
+.post-content .contact-figure img {
+  height: auto;
+  max-width: 100%;
+}
+.post-content .contact-figure figcaption::before {
+  content: "Figure " counter(contact-figure) ". ";
+  font-weight: 600;
+}
 </style>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const figures = Array.from(document.querySelectorAll(".post-content .contact-figure"));
+
+  document.querySelectorAll(".post-content [data-figure-ref]").forEach((reference) => {
+    const target = document.getElementById(reference.dataset.figureRef);
+    const index = figures.indexOf(target);
+
+    if (index >= 0) {
+      reference.textContent = `Figure ${index + 1}`;
+    }
+  });
+});
+</script>
 
 Simulating multibody systems with frictional contact is crucial in robotics, particularly for training robotic systems.
 This blog introduces some fundamental concepts of contact modeling.
 Let's consider the contact between the point foot of a quadruped and the ground.
 We define the gap function $\phi(q)$ as the signed distance between the point foot and the ground, where $q$ represents the generalized positions. 
 
-<p align="center">
-  <img src="/assets/img/Contact/quadruped.png" width="350"/>
-</p>
+<figure class="contact-figure">
+  <img src="/assets/img/Contact/quadruped.png" width="350" alt="Quadruped point-foot contact showing the gap function, contact force, and local friction cone"/>
+  <figcaption class="caption">Point-foot contact model: gap function, local contact frame, and admissible contact forces.</figcaption>
+</figure>
 
 The contact force $f$, expressed in the local contact frame, consists of the tangential component $f_T$ and the normal component $f_N$.
 The magnitude and direction of the contact force are not arbitrary. 
@@ -139,10 +170,21 @@ With all conditions established, we now apply them to various contact situations
 - **Take-off (Loss of Contact)**
 
 In this situation, the contact is breaking, i.e., $\left( \frac{1}{\Delta t} \phi(q_{t}) + c_{N, t+1} \right) > 0$. According to \eqref{eq:comp_constr} and \eqref{eq:f_cone}, the contact impulse should be null.
+During take-off, $c&#95;{T,t+1}$ remains a kinematic relative velocity evaluated in the candidate contact frame frozen at $q&#95;t$; it does not represent sliding and does not generate a friction impulse.
+For the formulation developed below, we introduce the following auxiliary variable:
 
-<p align="center">
-  <img src="/assets/img/Contact/takeoff-1.png" width="400"/>
-</p>
+$$
+\bar{c}_{t+1} :=
+\begin{bmatrix}
+    c_{T,t+1} \\
+    \dfrac{1}{\Delta t}\phi(q_t) + c_{N,t+1}
+\end{bmatrix}.
+$$
+
+<figure class="contact-figure">
+  <img src="/assets/img/Contact/takeoff-1.png" width="400" alt="Friction-cone geometry for take-off with the contact impulse at the cone apex"/>
+  <figcaption class="caption">Take-off: a positive predicted next-step gap implies a zero contact impulse.</figcaption>
+</figure>
 
 When contact is maintained, i.e., $\left( \frac{1}{\Delta t} \phi(q_{t}) + c_{N, t+1} \right) = 0$, there are two possible cases to consider: sticking and sliding.
 
@@ -150,23 +192,25 @@ When contact is maintained, i.e., $\left( \frac{1}{\Delta t} \phi(q_{t}) + c_{N,
 
 In this situation, the tangential contact velocity is zero and the contact impulse lies inside the friction cone.
 
-<p align="center">
-  <img src="/assets/img/Contact/sticking-1.png" width="300"/>
-</p>
+<figure class="contact-figure">
+  <img src="/assets/img/Contact/sticking-1.png" width="300" alt="Friction-cone geometry for sticking with zero tangential velocity and an impulse inside the cone"/>
+  <figcaption class="caption">Sticking: the tangential contact velocity is zero and the impulse remains inside the friction cone.</figcaption>
+</figure>
 
 - **Sliding (Dynamic Contact with Friction)**
 
 In this case, according to \eqref{eq:mdp}, the tangential contact velocity is strictly positive and the contact impulse reaches the boundary of the friction cone.
 
-<p align="center">
-  <img src="/assets/img/Contact/sliding-1.png" width="400"/>
-</p>
+<figure id="fig-sliding" class="contact-figure">
+  <img src="/assets/img/Contact/sliding-1.png" width="400" alt="Friction-cone geometry for sliding with nonzero tangential velocity and an impulse on the cone boundary"/>
+  <figcaption class="caption">Sliding: the friction impulse lies on the cone boundary and opposes the tangential velocity.</figcaption>
+</figure>
 
-Unfortunately, we cannot obtain a compact formulation, similar to \eqref{eq:comp_constr}, using $\bar{c}$ and $\lambda$, since $\bar{c}$ is not orthogonal to $\lambda$, as shown in the figure above.
-To get around this issue, we slightly modify $\bar{c}$ as follows:
+Unfortunately, we cannot obtain a compact formulation, similar to \eqref{eq:comp_constr}, using $\bar{c}&#95;{t+1}$ and $\lambda$, since $\bar{c}&#95;{t+1}$ is not orthogonal to $\lambda$, as shown in <a href="#fig-sliding" data-figure-ref="fig-sliding">Figure</a>.
+To get around this issue, we slightly modify $\bar{c}&#95;{t+1}$ as follows:
 
 $$
-\hat{c} = \bar{c} + \begin{bmatrix}
+\hat{c}_{t+1} = \bar{c}_{t+1} + \begin{bmatrix}
     0 \\ \mu \Vert c_{T, t+1} \Vert_2
 \end{bmatrix}.
 $$
@@ -199,9 +243,10 @@ $$
 
 Next, we provide a visual illustration of \eqref{eq:compact_form}.
 
-<p align="center">
-  <img src="/assets/img/Contact/contact_cases.png" width="700"/>
-</p>
+<figure class="contact-figure">
+  <img src="/assets/img/Contact/contact_cases.png" width="700" alt="Geometric comparison of take-off, sticking, and sliding under the compact cone complementarity formulation"/>
+  <figcaption class="caption">Geometric interpretation of the compact complementarity formulation: in all three contact modes, $\hat{c}&#95;{t+1}$ is orthogonal to the contact impulse $\lambda$.</figcaption>
+</figure>
 
 The compact formulation $\eqref{eq:compact_form}$ is a Nonlinear Complementarity Problem (NCP).
-Solving an NCP is challenging in general. 
+Solving an NCP is challenging in general. In subsequent blog posts, we will introduce two common simplifications of this formulation: the Linear Complementarity Problem (LCP) and the Cone Complementarity Problem (CCP).
