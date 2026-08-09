@@ -39,7 +39,7 @@ $$
 M (q)\dot{v} = \tau - h(q, v) + J^\top (q) \boldsymbol{f},
 $$
 
-where $v$ is the generalized velocity, $M(q)$ denotes the joint space inertia matrix, $h(q, v)$ accounts for the centrifugal and Coriolis effects, and $\tau$ is the actuation torque. The collection of contact forces is denoted as $\boldsymbol{f} \in \mathbb{R}^{3 N_c}$, where $N_c$ is the number of contacts that the robot makes at the current time instance. $J(q)$ represents the Jacobian, which maps the generalized velocity to the collection of contact velocities expressed in the local contact frames.
+where $v$ is the generalized velocity, $M(q)$ denotes the joint space inertia matrix, $h(q, v)$ accounts for the centrifugal, Coriolis, and gravitational effects, and $\tau$ is the actuation torque. The collection of contact forces is denoted as $\boldsymbol{f} \in \mathbb{R}^{3 N_c}$, where $N_c$ is the number of contacts that the robot makes at the current time instance. $J(q)$ represents the Jacobian, which maps the generalized velocity to the collection of contact velocities expressed in the local contact frames.
 To discretize the system, we adopt the semi-implicit Euler integration scheme:
 
 $$
@@ -136,7 +136,7 @@ $$ -->
 
 With all conditions established, we now apply them to various contact situations. There are three typical contact situations: take-off, sticking, and sliding. 
 
-- Take-off (Loss of Contact)
+- **Take-off (Loss of Contact)**
 
 In this situation, the contact is breaking, i.e., $\left( \frac{1}{\Delta t} \phi(q_{t}) + c_{N, t+1} \right) > 0$. According to \eqref{eq:comp_constr} and \eqref{eq:f_cone}, the contact impulse should be null.
 
@@ -146,7 +146,7 @@ In this situation, the contact is breaking, i.e., $\left( \frac{1}{\Delta t} \ph
 
 When contact is maintained, i.e., $\left( \frac{1}{\Delta t} \phi(q_{t}) + c_{N, t+1} \right) = 0$, there are two possible cases to consider: sticking and sliding.
 
-- Sticking (Static Contact)
+- **Sticking (Static Contact)**
 
 In this situation, the tangential contact velocity is zero and the contact impulse lies inside the friction cone.
 
@@ -154,7 +154,7 @@ In this situation, the tangential contact velocity is zero and the contact impul
   <img src="/assets/img/Contact/sticking-1.png" width="300"/>
 </p>
 
-- Sliding (Dynamic Contact with Friction)
+- **Sliding (Dynamic Contact with Friction)**
 
 In this case, according to \eqref{eq:mdp}, the tangential contact velocity is strictly positive and the contact impulse reaches the boundary of the friction cone.
 
@@ -185,53 +185,23 @@ K_{\mu} \ni \lambda \perp
 \end{equation}
 $$
 
-where $K^*_{\mu}$ represents the dual cone, defined as
+where $K_{\mu}^*$ denotes the dual cone of the friction cone $K_{\mu}$ defined in $\eqref{eq:f_cone}$, given by
 
 $$
-\begin{equation*} 
-    K^*_{\mu} = \left\{ \gamma \in \mathbb{R}^3 \mid \gamma^\top \lambda \geq 0,\; \forall \lambda \in K \right\}.
+\begin{equation*}
+\begin{aligned}
+    K^*_{\mu}
+    &:= \left\{ \gamma \in \mathbb{R}^3 \mid \gamma^\top \lambda \geq 0,\; \forall \lambda \in K_{\mu} \right\} \\
+    &= \left\{ \gamma = (\gamma_T, \gamma_N) \in \mathbb{R}^3 \mid \gamma_N \geq \mu \Vert \gamma_T \Vert_2 \right\}.
+\end{aligned}
 \end{equation*}
 $$
 
-Below, we provide a visual illustration of \eqref{eq:compact_form}.
+Next, we provide a visual illustration of \eqref{eq:compact_form}.
 
 <p align="center">
   <img src="/assets/img/Contact/contact_cases.png" width="700"/>
 </p>
 
-We note that the compact formulation \eqref{eq:compact_form} is related to a Nonlinear Complementarity Problem (NCP).
-It is challenging to solve a NCP in general.
-Therefore, several approximation methods have been proposed. For example, by relaxing the complementarity constraint, we arrive at a Cone Complementarity Problem (CCP):
-
-$$
-\begin{equation} \label{eq:CCP}
-    K_{\mu} \in \lambda \perp \bar{c}_{t+1} \in K^*_{\mu}.
-\end{equation}
-$$
-
-The formulation above is used in [MuJoCo](https://mujoco.readthedocs.io/en/stable/computation/index.html#primal-problem), and it can be reformulated as a convex optimization problem. The solution is discussed in a separate blog post. Here, we focus on the potential drawbacks of this approximation.
-Once again, we visualize the relaxed complementarity constraint. 
-
-<p align="center">
-  <img src="/assets/img/Contact/takeoff_sticking_relaxed.png" width="700"/>
-</p>
-
-Although there is a difference in the take-off case (highlighted in blue), the CCP in \eqref{eq:CCP} can still model both situations in a reasonable way. However, an issue emerges when considering the sliding case.
-
-<p align="center">
-  <img src="/assets/img/Contact/sliding_relaxed.png" width="420"/>
-</p>
-
-In this model, the term $\left( \frac{1}{\Delta t} \phi(q_{t}) + c_{N, t+1} \right)$ does not vanish. The normal velocity and normal impulse are both nonzero at the same time, which is physically inaccurate.
-For example, consider a rigid cube placed on the ground with a nonzero velocity in the x-direction. The cube should slide and gradually slow down due to friction.
-However, if the CCP model is used, the cube will bounce due to the nonzero normal velocity.
-Next, let's see if a similar phenomenon can be observed in MuJoCo.
-The code for this example is available [here](https://github.com/Luyao787/contact-modeling-tutorial/blob/master/mujoco_contact.ipynb).
-
-<p align="center">
-  <img src="/assets/img/Contact/free_body_z_position.png" width="600"/>
-</p>
-
-As shown in the figure above, the cube moves in the z-direction, and its displacement from the ground decreases as the tangential velocity $c_T$ diminishes. 
-To conclude, such an artifact only emerges in the case of sliding, and its consequence can be ignored when the discretization step is small and the tangential velocity is low. 
-In robotics applications such as grasping, locomotion, or rolling contact, the sticking mode is often of primary interest and can be precisely modeled using complementarity constraint problems (CCPs).
+The compact formulation $\eqref{eq:compact_form}$ is a Nonlinear Complementarity Problem (NCP).
+Solving an NCP is challenging in general. 
