@@ -545,7 +545,7 @@ The LCP recovers the familiar contact modes directly from complementarity.
 
   so the tangential impulse lies on the boundary of the friction pyramid. Equation $\eqref{eq:direction_complementarity}$ selects the face or edge that opposes the sliding velocity and maximizes dissipation. -->
 
-<!-- Unlike the [CCP relaxation discussed separately]({% post_url 2025-06-23-contact_modeling2 %}), this construction keeps the discrete Signorini pair
+<!-- Unlike the [CCP relaxation discussed separately]({% post_url 2025-06-23-contact_modeling_ccp %}), this construction keeps the discrete Signorini pair
 
 $$
 0\leq\lambda_N
